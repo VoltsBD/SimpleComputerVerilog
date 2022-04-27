@@ -1,0 +1,221 @@
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer: 
+// 
+// Create Date: 21.04.2022 11:38:11
+// Design Name: 
+// Module Name: SAP_TB
+// Project Name: 
+// Target Devices: 
+// Tool Versions: 
+// Description: 
+// 
+// Dependencies: 
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//////////////////////////////////////////////////////////////////////////////////
+
+
+module SAP_TB();
+
+reg [7:0] INRtb;
+reg INTtb;
+reg rsttb;
+reg clktb;
+wire [7:0] OUTRtb;
+wire[7:0] PCtb;   // PC
+wire [2:0] statetb;
+wire [7:0] IRtb;
+wire [3:0] aluopseltb;
+wire [1:0] pcopseltb;
+wire [3:0] seldsttb;
+wire [3:0] selsrctb;
+wire [7:0] ALUREsulttb; // Primitive Chipscope
+wire [7:0] AYEtb;
+wire [7:0] BEEtb;
+wire [7:0] MARtb;
+wire [7:0] PCAtb;
+
+SAP UUT(
+.INR(INRtb),
+.INT(INTtb),
+.rst(rsttb),
+.clk(clktb),
+.OUTR(OUTRtb),
+.PC(PCtb),   // PC
+.PCA(PCAtb),
+.state(statetb),
+.IR(IRtb),
+.aluopsel(aluopseltb),
+.pcopsel(pcopseltb),
+.seldst(seldsttb),
+.selsrc(selsrctb),
+.ALUREsult(ALUREsulttb), // Primitive Chipscope
+.AYE(AYEtb),
+.BEE(BEEtb),
+.MAR(MARtb)
+);
+/*module SAP(
+     input wire [7:0] INR,
+     input wire [7:0] ROMDATA,
+     input wire rst,
+     input wire clk,
+     output wire [7:0] OUTR,
+     output wire[7:0] PC,   // PC
+     output wire [2:0] state,
+     output wire [3:0] aluopsel,
+     output wire [1:0] pcopsel,
+     output wire [3:0] seldst,
+     output wire [3:0] selsrc,
+     output wire [7:0] ALUREsult, // Primitive Chipscope
+     output wire [7:0] AYE,
+     output wire [7:0] BEE,
+     output wire [7:0] MAR
+    );
+*/    
+initial 
+begin
+   #5 rsttb=1'b0; clktb=1'b0; INRtb=8'hf0; INTtb=1'b0;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 rsttb=1'b1;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+  
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+  
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 INTtb=1'b1;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 INTtb=1'b0;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   #5 clktb=~clktb;
+   
+end
+
+endmodule
