@@ -30,7 +30,7 @@ module IRDECODER(
     output reg [1:0] pcopsel,
     output reg [3:0] seldst,
     output reg [3:0] selsrc,
-    output reg [2:0] state,
+    output reg [3:0] state,
     output reg [7:0] IR,
     output reg dstoe,
     output reg srcoe,
@@ -39,11 +39,13 @@ module IRDECODER(
     );
 
 reg statex;
+reg prima;
 
 
 initial
 begin
-state=3'h0;
+prima=1'b0;
+state=4'h0;
 IR=1'h0;
 dstoe=1'b1;
 srcoe=1'b1;
@@ -61,8 +63,8 @@ end
 always@(posedge clk)
 begin
     if(!rst) begin
-             state=3'h0;
-             state=3'h0;
+             state=4'h0;
+             prima=1'b0;
              IR=1'h0;
              dstoe=1'b1;
              srcoe=1'b1;
@@ -76,9 +78,13 @@ begin
              IRJUMP=8'd33; // Jump vector For Interrupt
              end 
     if(rst) begin
-                 if(INT==1'b1 & state==3'h0)
+                 if(INT==1'b1 & state!=4'h0) begin
+                         prima=1'b1;
+                         end
+                 if(prima==1'b1 & state==4'h0)
                     begin
-                    statex=1'b1;
+                    prima=1'b0; // reset prima value
+                    statex=1'b1; // primes interrupt routine to start
                     end
                  if(statex)
                  begin
@@ -98,7 +104,7 @@ begin
                  3'h2: begin
                        SELJUMP=1'b0; //IRJUMP Selected
                        pcopsel=2'h0; // PC Refresh
-                       state=3'h0;  // Reset State
+                       state=4'h0;  // Reset State
                        statex=1'b0; // Ends ISR Vector
                        end                       
                 endcase
@@ -108,11 +114,11 @@ begin
                     dstoe=1'b1;
                     srcoe=1'b1;
                     case(state)
-                    3'h0: begin
+                    4'h0: begin
                           IR=OPCODE; // FETCH
                           state=state+1;
                           end
-                    3'h1: begin
+                    4'h1: begin
                           case(IR)   //DECODE PH1
                           8'h00: begin
                                  seldst=4'h1; 
@@ -164,10 +170,10 @@ begin
                           endcase
                             state=state+8'h01;
                           end
-                     3'h2: begin
+                     4'h2: begin
                             state=state+8'h01;
                            end
-                     3'h3: begin
+                     4'h3: begin
                           case(IR) // EXECUTE PH2
                           8'h00: begin
                                  seldst=4'h1; 
@@ -219,22 +225,47 @@ begin
                           endcase
                           state=state+8'h01;
                           end     
-                     3'h4: begin
-                                 pcopsel=2'h1;
-                                 state=state+8'h01;
-                                end
-                     3'h5: begin
+                     4'h4: if(IR==8'h06) begin
+                                             pcopsel=2'h0;
+                                             state=state+8'h01;
+                                          end
+                            else
+                                  begin
+                                       pcopsel=2'h1;
+                                       state=state+8'h01;
+                                   end
+                     4'h5: begin
                             if(IR==8'h06) begin 
-                                         pcopsel=2'h2;
+                                         state=state+1;
                                          end// PC<-MAR
-     //                       aluopsel=4'h0;                         
-                            pcopsel=2'h0;
-                            state=8'h0;
+                            else
+                                begin                         
+                                    pcopsel=2'h0;
+                                    state=8'h0;
+                                end
                             end
-                     //3'h6:  begin
-                    //         pcopsel=2'h1; 
-                    //         state=8'h0;
-                    //       end
+                     4'h6:  if(IR==8'h06) begin
+                                            pcopsel=2'h0; 
+                                            state=state+1;
+                                          end
+                            else  
+                                           begin
+                                             pcopsel=2'h1; 
+                                             state=4'h0;
+                                           end
+                     4'h7:  begin
+                             pcopsel=2'h2; 
+                             state=4'h8;
+                            end
+                     4'h8:  begin
+                              pcopsel=2'h0; 
+                              state=8'h9;
+                            end
+                     4'h9:  begin
+                            //   IR=OPCODE;
+                               pcopsel=2'h0; 
+                               state=8'h0;
+                             end
                      default: begin
                               seldst=4'h1;
                               selsrc=4'h1; 
