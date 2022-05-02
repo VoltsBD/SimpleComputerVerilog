@@ -1,12 +1,12 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company:  DLSU
+// Engineer:  Voltaire Dupo
 // 
 // Create Date: 25.04.2022 11:35:52
-// Design Name: 
+// Design Name:  MARIE Implementation
 // Module Name: ROMBasic
-// Project Name: 
+// Project Name: SAP
 // Target Devices: 
 // Tool Versions: 
 // Description: 
@@ -15,7 +15,7 @@
 // 
 // Revision:
 // Revision 0.01 - File Created
-// Additional Comments:
+// Additional Comments: For Educational Use only use at your own risk for commercial purposes
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -34,13 +34,13 @@ if(!rst) DATA=8'h00;
 if(rst)
       begin
       case(ADDR)
-      8'd0:  DATA=8'h01;
-      8'd1:  DATA=8'h02;
-      8'd2:  DATA=8'h03;
-      8'd3:  DATA=8'h04;
-      8'd4:  DATA=8'h07;
-      8'd5:  DATA=8'h03;
-      8'd6:  DATA=8'h00;
+      8'd0:  DATA=8'h01; // ACC <- INR
+      8'd1:  DATA=8'h02; // BREG <-INR
+      8'd2:  DATA=8'h03; // OUTR <- ACC
+      8'd3:  DATA=8'h04; // OUTR <-BREG
+      8'd4:  DATA=8'h07; // ACC <- ADD AB
+      8'd5:  DATA=8'h03; // OUTR <- ACC
+      8'd6:  DATA=8'h06; // JMP 00
       8'd7:  DATA=8'h00;
       8'd8:  DATA=8'h00;
       8'd9:  DATA=8'h00;
@@ -67,9 +67,9 @@ if(rst)
       8'd30:  DATA=8'h00;
       8'd31:  DATA=8'h00;
       8'd32:  DATA=8'h00;
-      8'd33:  DATA=8'h00;
-      8'd34:  DATA=8'h00;
-      8'd35:  DATA=8'h00;
+      8'd33:  DATA=8'h07; // ADD AB
+      8'd34:  DATA=8'h07; // ADD AB
+      8'd35:  DATA=8'h06; // JMP 00
       8'd36:  DATA=8'h00;
       8'd37:  DATA=8'h00;
       8'd38:  DATA=8'h00;
@@ -291,6 +291,8 @@ if(rst)
       8'd254:  DATA=8'h00;
       endcase
       end
-end
+      
+      end
 
 endmodule
+
